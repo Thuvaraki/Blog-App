@@ -85,7 +85,7 @@ const Register = () => {
         <div className="mb-3 d-flex justify-content-center align-items-center">
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn btn-secondary"
             style={{ marginRight: "10px" }}
           >
             Register

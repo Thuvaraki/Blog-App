@@ -68,7 +68,7 @@ const Login = () => {
         <div className="mb-3 d-flex justify-content-center align-items-center">
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn btn-secondary"
             style={{ marginRight: "10px" }}
           >
             Login
@@ -76,7 +76,6 @@ const Login = () => {
           <span style={{ marginLeft: "10px" }}>
             Don't' have an account yet?
             <Link to={"/register"} style={{ marginLeft: "5px" }}>
-              {" "}
               Register
             </Link>
           </span>
