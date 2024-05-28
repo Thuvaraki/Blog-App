@@ -15,20 +15,20 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const success = await registerUser(register);
-    // if (success) {
-    //   navigate(redirectUrl, { replace: true });
-    // } else {
-    //   setErrorMessage("Invalid username or password. Please try again.");
-    // }
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 4000);
+    const response = await fetch("http://localhost:4000/register", {
+      method: "POST",
+      body: JSON.stringify(register),
+      headers: { "Content-Type": "application/json" },
+    });
+    if (response.status === 200) {
+      alert("registration successful");
+    } else {
+      alert("registration failed");
+    }
   };
 
   return (
     <div className="container col-12 col-md-6 mt-5 mb-5">
-      {errorMessage && <p className="alert alert-danger">{errorMessage}</p>}
       <h2 className="hotel-color text-center mb-5">Register</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3 row">
