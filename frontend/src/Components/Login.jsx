@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, Navigate } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 const Login = () => {
+  const { setUserInfo } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [login, setLogin] = useState({
     email: "",
@@ -22,8 +24,9 @@ const Login = () => {
       credentials: "include", // Include credentials such as cookies
     });
     if (response.status === 200) {
+      const userInfo = await response.json();
+      setUserInfo(userInfo);
       setRedirect(true);
-      // alert("Login successful");
     } else {
       alert("Login failed");
     }

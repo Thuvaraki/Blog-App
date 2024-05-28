@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const UserModel = require("./models/User.js");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 const PORT = 4000;
 const app = express();
@@ -15,6 +16,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 const saltRounds = 10;
 const SECRET = "ABCD1234EFGH5678";
@@ -61,13 +63,28 @@ app.post("/login", async (req, res) => {
       SECRET,
       (err, token) => {
         if (err) throw err;
-        res.cookie("token", token).json("ok");
+        res.cookie("token", token).json({
+          id: user._id,
+          username: user.username,
+        });
       }
     );
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Login failed" });
   }
+});
+
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, SECRET, {}, (err, info) => {
+    if (err) throw err;
+    res.json(info);
+  });
+});
+
+app.post("/logout", (req, res) => {
+  res.cookies("token", "").json("ok");
 });
 
 app.listen(PORT, () => {
