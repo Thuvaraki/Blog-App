@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -7,6 +7,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [redirect, setRedirect] = useState(false);
 
   const handleInputChange = (e) => {
     setLogin({ ...login, [e.target.name]: e.target.value });
@@ -14,16 +15,23 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const success = await loginUser(login);
-    // if (success) {
-    //   navigate(redirectUrl, { replace: true });
-    // } else {
-    //   setErrorMessage("Invalid username or password. Please try again.");
-    // }
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 4000);
+    const response = await fetch("http://localhost:4000/login", {
+      method: "POST",
+      body: JSON.stringify(login),
+      headers: { "content-type": "application/json" },
+      credentials: "include", // Include credentials such as cookies
+    });
+    if (response.status === 200) {
+      setRedirect(true);
+      // alert("Login successful");
+    } else {
+      alert("Login failed");
+    }
   };
+
+  if (redirect) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="container col-6 mt-5 mb-5">
@@ -58,7 +66,7 @@ const Login = () => {
               type="password"
               className="form-control"
               id="inputPassword"
-              name="password" // Corrected the name attribute
+              name="password"
               value={login.password}
               onChange={handleInputChange}
             />
