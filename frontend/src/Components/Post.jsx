@@ -1,6 +1,7 @@
 import React from "react";
+import { formatISO9075 } from "date-fns";
 
-const Post = () => {
+const Post = (posts) => {
   return (
     <div
       className="card mb-3"
@@ -10,7 +11,8 @@ const Post = () => {
         <div className="row">
           <div className="col-md-4">
             <img
-              src="https://cdn.pixabay.com/photo/2016/09/08/18/45/cube-1655118_1280.jpg"
+              // src="https://cdn.pixabay.com/photo/2016/09/08/18/45/cube-1655118_1280.jpg"
+              src={"http://localhost:4000/" + posts.cover}
               className="card-img mt-1 mb-1"
               alt="Image for blog"
               style={{ width: "100%", height: "100%" }}
@@ -18,18 +20,14 @@ const Post = () => {
           </div>
           <div className="col-md-8">
             <div className="card-body">
-              <h4 className="card-title">Card title</h4>
+              <h4 className="card-title">{posts.title} </h4>
               <p className="card-text">
-                Author name
-                <time className="ms-4">2023-01-06</time>
+                {posts.author.username}
+                <time className="ms-4">
+                  {formatISO9075(new Date(posts.createdAt))}
+                </time>
               </p>
-              <p className="card-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima
-                corrupti hic ratione debitis ea laborum odit, voluptatum quam
-                ipsum qui at consequuntur alias atque, natus molestias dolore
-                optio. Voluptates ratione ut dolores est maiores tempora in
-                explicabo odio perferendis unde?
-              </p>
+              <p className="card-text">{posts.summary}</p>
             </div>
           </div>
         </div>

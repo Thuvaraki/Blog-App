@@ -21,6 +21,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 const saltRounds = 10;
 const SECRET = "ABCD1234EFGH5678";
@@ -102,13 +103,32 @@ app.post("/newPost", uploadMiddleware.single("file"), async (req, res) => {
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
 
-  const { title, summary, content } = req.body;
-  const post = await PostModel.create({
-    title,
-    summary,
-    content,
-    cover: newPath,
-  });
+  const { token } = req.cookies;
+  jwt.verify(token, SECRET, {}, async (err, info) => {
+    if (err) throw err;
 
-  res.json(post);
+    const { title, summary, content } = req.body;
+    const post = await PostModel.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+    });
+
+    res.json(post);
+  });
+});
+
+app.get("/posts", async (req, res) => {
+  try {
+    const posts = await PostModel.find()
+      .populate("author", ["username"])
+      .sort({ createdAt: -1 }) // Sort by creation date in descending order
+      .limit(20); // Limit the results to the 20 most recent posts
+    res.json(posts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ message: "Failed to fetch posts" });
+  }
 });
