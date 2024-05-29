@@ -89,7 +89,7 @@ app.get("/profile", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.cookies("token", "").json("ok");
+  res.cookie("token", "").json("ok");
 });
 
 app.post("/newPost", uploadMiddleware.single("file"), async (req, res) => {
