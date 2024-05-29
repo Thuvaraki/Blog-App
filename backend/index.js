@@ -92,10 +92,6 @@ app.post("/logout", (req, res) => {
   res.cookies("token", "").json("ok");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
 app.post("/newPost", uploadMiddleware.single("file"), async (req, res) => {
   const { originalname, path } = req.file;
   const parts = originalname.split(".");
@@ -131,4 +127,20 @@ app.get("/posts", async (req, res) => {
     console.error("Error fetching posts:", error);
     res.status(500).json({ message: "Failed to fetch posts" });
   }
+});
+
+app.get("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await PostModel.findById(id).populate("author", ["username"]);
+    res.json(post);
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    res.status(500).json({ message: "Failed to fetch post" });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
