@@ -1,5 +1,6 @@
 import React from "react";
 import { formatISO9075 } from "date-fns";
+import { Link } from "react-router-dom";
 
 const Post = (posts) => {
   return (
@@ -10,17 +11,23 @@ const Post = (posts) => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-4">
-            <img
-              // src="https://cdn.pixabay.com/photo/2016/09/08/18/45/cube-1655118_1280.jpg"
-              src={"http://localhost:4000/" + posts.cover}
-              className="card-img mt-1 mb-1"
-              alt="Image for blog"
-              style={{ width: "100%", height: "100%" }}
-            />
+            <Link to={`/posts/${posts._id}`}>
+              <img
+                src={"http://localhost:4000/" + posts.cover}
+                className="card-img mt-1 mb-1"
+                alt="Image for blog"
+                style={{ width: "100%", height: "200px" }}
+              />
+            </Link>
           </div>
           <div className="col-md-8">
             <div className="card-body">
-              <h4 className="card-title">{posts.title} </h4>
+              <Link
+                to={`/posts/${posts._id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <h3 className="card-title">{posts.title}</h3>
+              </Link>
               <p className="card-text">
                 {posts.author.username}
                 <time className="ms-4">
