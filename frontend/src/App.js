@@ -1,4 +1,3 @@
-import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Header from "../src/Components/Header";
 import Login from "../src/Components/Login";
@@ -7,6 +6,7 @@ import Posts from "../src/Components/Posts";
 import { UserContextProvider } from "./UserContext";
 import CreatePost from "./Components/CreatePost";
 import SinglePost from "./Components/SinglePost";
+import EditPost from "./Components/EditPost";
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
           <Route path="/register" element={<Register />}></Route>
           <Route path="/create" element={<CreatePost />}></Route>
           <Route path="/posts/:id" element={<SinglePost />}></Route>
+          <Route path="/edit/:id" element={<EditPost />}></Route>
         </Routes>
       </UserContextProvider>
     </>

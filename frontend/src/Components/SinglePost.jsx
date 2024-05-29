@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { formatISO9075 } from "date-fns";
+import { UserContext } from "../UserContext";
+import { Link } from "react-router-dom";
 
 const SinglePost = () => {
   const [post, setPost] = useState(null);
+  const { userInfo } = useContext(UserContext);
   const { id } = useParams();
 
   useEffect(() => {
@@ -35,6 +38,24 @@ const SinglePost = () => {
       <p style={{ textAlign: "center" }}>
         <time>{formatISO9075(new Date(post.createdAt))}</time>
       </p>
+
+      {userInfo.id === post.author._id && (
+        <div
+          style={{
+            marginBottom: "10px",
+            backgroundColor: "black",
+            padding: "8px",
+            borderRadius: "5px",
+          }}
+        >
+          <Link
+            to={`/edit/${id}`}
+            style={{ textDecoration: "none", color: "white" }}
+          >
+            Edit this post
+          </Link>
+        </div>
+      )}
 
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <img

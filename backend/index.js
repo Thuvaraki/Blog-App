@@ -141,6 +141,48 @@ app.get("/posts/:id", async (req, res) => {
   }
 });
 
+app.put("/updatePost", uploadMiddleware.single("file"), async (req, res) => {
+  let newPath;
+  if (req.file) {
+    const { originalname, path } = req.file;
+    const parts = originalname.split(".");
+    const ext = parts[parts.length - 1];
+    newPath = path + "." + ext;
+    fs.renameSync(path, newPath);
+  }
+
+  const { token } = req.cookies;
+  jwt.verify(token, SECRET, {}, async (err, info) => {
+    if (err) throw err;
+
+    const { id, title, summary, content } = req.body;
+
+    try {
+      const existingPost = await PostModel.findById(id);
+
+      if (!existingPost) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      const updatedData = {
+        title,
+        summary,
+        content,
+        cover: newPath ? newPath : existingPost.cover,
+      };
+
+      const updatedPost = await PostModel.findByIdAndUpdate(id, updatedData, {
+        new: true,
+      });
+
+      res.json(updatedPost);
+    } catch (error) {
+      console.error("Error updating post:", error);
+      res.status(500).json({ message: "Failed to update post" });
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
